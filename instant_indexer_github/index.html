@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Blogger Instant Indexing Tool</title>
+</head>
+<body style="font-family: Arial, sans-serif; margin: 40px;">
+  <h2>Blogger Instant Indexing Tool</h2>
+  <textarea id="urls" placeholder="Enter up to 50 URLs, one per line" style="width:100%;height:150px;"></textarea><br><br>
+  <button onclick="submitUrls()" style="padding:10px 20px;">Submit to Google</button>
+  <pre id="result" style="margin-top:20px; background:#f4f4f4; padding:10px;"></pre>
+
+<script>
+async function submitUrls(){
+  const urls = document.getElementById('urls').value.trim().split('\n').filter(u => u);
+  let resultBox = document.getElementById('result');
+  resultBox.textContent = 'Submitting...';
+  const res = await fetch('/.netlify/functions/indexer', {
+    method:'POST',
+    headers:{'Content-Type':'application/json'},
+    body: JSON.stringify({urls})
+  });
+  const data = await res.json();
+  resultBox.textContent = JSON.stringify(data,null,2);
+}
+</script>
+</body>
+</html>
